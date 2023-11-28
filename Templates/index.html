@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block header %}
+
+            <div class="header-content">
+                <div class="logo">
+                    <img src="../static/images/logo3.png" alt="logo">
+                </div>
+                <nav>
+                    <form action="/search" class="search" method="POST">
+                        <input type="search" autocomplete="off" placeholder="Search For Friends" name="search">
+                        <button type="submit"><i class="fa-fw fa fa-magnifying-glass"></i></button>
+                    </form>
+                    <a href="/settings" class="settings"><i class="fa fa-fw fa-gear fa-solid"></i></a>
+                    <form action="/profile" method="POST" class="user-profile">
+                        <input type="hidden" value="{{user_id}}" name="profile_id">
+                        <button type="submit">
+                            {% if profile_img_path %}
+                                <input type="hidden" value="{{profile_img_path}}" name="profile_img">
+                                <div class="image">
+                                    <img src="{{profile_img_path}}" alt="Profile Image">
+                                </div>
+                            {% else %}
+                                <div class="image">
+                                    <img src="../static/images/avatar-01.png" alt="Profile Image">
+                                </div>
+                            {% endif %}
+                        </button>
+                    </form>
+                </nav>
+            </div>
+
+{% endblock %}
+
+{% block body %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+   {% for message in messages %}
+   <div class="error">{{message}}</div>
+   {% endfor %}
+{% endif %}
+{% endwith %}
+    <div class="chats">
+        <div class="container">
+            <div class="chats-container">
+                <h2>Chats</h2>
+                <div class="chats-content">
+                    {% if not chats %}
+                        <div class="no-chats">
+                            <h3>No Chats Yet</h3>
+                            <p>Search for friends and add them to chat !!</p>
+                        </div>
+                    {% endif %}
+                   {% for chat, name, path, sender in packed %}
+                    <div class="chat">
+                        <form action="/chat" method="POST">
+                            <input type="hidden" value="{{chat['id']}}" name="chat_id">
+                            <input type="hidden" value="{{name['name']}}" name="chat_name">
+                            <input type="hidden" value="{{path['path']}}" name="chat_img">
+                            <button type="submit">
+                                <div class="image">
+                                    {% if path['path'] %}
+                                    <img src="{{path['path']}}" alt="Chat Image">
+                                    {% else %}
+                                    <img src="../static/images/avatar-01.png" alt="Chat Image">
+                                    {% endif %}
+                                </div>
+                                <div class="chat-info">
+                                    <h3>{{name['name']}}</h3>
+                                    <p><span>{{sender['name']}}: </span>{{chat['last_message']}}</p>
+                                </div>
+                                <div class="date">
+                                    <span>{{chat['last_message_date']}}</span>
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

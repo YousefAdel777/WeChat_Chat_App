@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Redirect
+{% endblock %}
+
+{% block header %}
+    <div class="header-content">
+        <div class="logo">
+            <a href="/"><img src="../static/images/logo3.png" alt="logo"></a>
+        </div>
+        <a href="/" class="home"><i class="fa-fw fa-solid fa-arrow-left-long"></i></a>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="redirect">
+            <h2>Redirect</h2>
+            <div class="redirect-content">
+                {% for chat, name, path in packed %}
+                <div class="chat">
+                    <form action="/confirm_redirect_message" method="POST">
+                        <input type="hidden" value="{{chat['id']}}" name="chat_id">
+                        <input type="hidden" value="{{name['name']}}" name="chat_name">
+                        <input type="hidden" value="{{path['path']}}" name="chat_img">
+                        <input type="hidden" value="{{message_id}}" name="message_id">
+                        <button type="submit">
+                            <div class="image">
+                                {% if path['path'] %}
+                                <img src="{{path['path']}}" alt="Chat Image">
+                                {% else %}
+                                <img src="../static/images/avatar-01.png" alt="Chat Image">
+                                {% endif %}
+                            </div>
+                            <div class="chat-info">
+                                <h3>{{name['name']}}</h3>
+                            </div>
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

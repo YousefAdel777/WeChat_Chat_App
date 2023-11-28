@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block header %}
+
+    <div class="header-content">
+        <div class="logo">
+            <img src="../static/images/logo3.png" alt="logo">
+        </div>
+        <nav>
+            <a href="/login" class="login btn">Log In</a>
+        </nav>
+    </div>
+
+{% endblock %}
+
+{% block body %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="error">{{message}}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<div class="page">
+    <div class="container">
+    <div class="logo">
+        <img src="../static/images/logo3.png" alt="logo">
+    </div>
+        <h1>Welcome To WeChat</h1>  
+        <form action="/register" method="POST" class="login">
+            <input type="text" autocomplete="off" autofocus placeholder="Username" name="username">
+            <input type="password" autocomplete="off" placeholder="Password" name="password">
+            <input type="password" autocomplete="off" placeholder="Confirm Password" name="confirm_password">
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

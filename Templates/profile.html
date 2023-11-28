@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block header %}
+    <div class="header-content">
+        <div class="logo">
+            <a href="/"><img src="../static/images/logo3.png" alt="logo"></a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="profile">
+        <h2>{{name}}</h2>
+        <div class="profile-content">
+            <div class="image">
+            {% if not profile_img %}
+                <img src="../static/images/avatar-01.png" alt="Profile Image">
+            {% else %}
+                <img src="{{profile_img}}" alt="Profile Image">
+            {% endif %}
+            </div>
+            <div class="forms">
+            {% if user_id != profile_id %}
+                {% if not friend %}
+                    <form action="/add" method="POST">
+                        <input type="hidden" value="{{profile_id}}" name="add_friend_id">
+                        <button type="submit">
+                            <i class="fa-fw fa-solid fa-user-friends"></i>
+                            <span>Add</span>
+                        </button>
+                    </form>
+                {% endif %}
+                    <form action="/chat" method="POST">
+                        <input type="hidden" value="{{profile_id}}" name="other_user_id">
+                        <input type="hidden" value="{{chat_id}}" name="chat_id">
+                        <input type="hidden" value="{{name}}" name="chat_name">
+                        <input type="hidden" value="{{profile_img}}" name="chat_img">
+                        <button type="submit">
+                            <i class="fa-fw fa-solid fa-comment"></i>
+                            <span>Chat</span>
+                        </button>
+                    </form>
+            {% endif %}
+            </div>
+            {% if info[0]['person_id'] %}
+                <div class="profile-info">
+                    <h3>Info</h3>
+                    <div class="info">
+                        {% if info[0]['country'] %}
+                            <div class="fact">
+                                <span>Country: </span>
+                                <p>{{info[0]['country']}}</p>
+                            </div>
+                        {% endif %}
+                        {% if info[0]['city'] %}
+                            <div class="fact">
+                                <span>City: </span>
+                                <p>{{info[0]['city']}}</p>
+                            </div>
+                        {% endif %}
+                        {% if info[0]['email'] %}
+                            <div class="fact">
+                                <span>E-mail: </span>
+                                <p>{{info[0]['email']}}</p>
+                            </div>
+                        {% endif %}
+                        {% if info[0]['day'] and info[0]['month'] and info[0]['year'] %}
+                            <div class="fact">
+                                <span>Date of birth: </span>
+                                <p>{{info[0]['day']}} / {{info[0]['month']}} / {{info[0]['year']}} </p>
+                            </div>
+                        {% endif %}
+                        {% if info[0]['day'] and info[0]['month'] and not info[0]['year'] %}
+                            <div class="fact">
+                                <span>Date of birth: </span>
+                                <p>{{info[0]['day']}} / {{info[0]['month']}} / ??</p>
+                            </div>
+                        {% endif %}
+                        {% if info[0]['day'] and info[0]['year'] and not info[0]['month'] %}
+                            <div class="fact">
+                                <span>Date of birth: </span>
+                                <p>{{info[0]['day']}} / ?? / {{info[0]['year']}}</p>
+                            </div>
+                        {% endif %}
+                        {% if info[0]['month'] and info[0]['year'] and not info[0]['day'] %}
+                            <div class="fact">
+                                <span>Date of birth: </span>
+                                <p> ?? / {{info[0]['month']}} / {{info[0]['year']}}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if not info[0]['country'] and not info[0]['city'] and not info[0]['email'] and (not info[0]['day'] or not info[0]['year']) and (not info[0]['month'] or not info[0]['year']) %}
+                    <div class="no-chats">
+                        <h3>No Profile Info</h3>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Settings
+{% endblock %}
+
+{% block header %}
+    <div class="header-content">
+        <div class="logo">
+            <a href="/"><img src="../static/images/logo3.png" alt="logo"></a>
+        </div>
+        <nav>
+            <form action="/logout" method="POST" class="logout">
+                <button type="submit" class="btn">Log Out</button>
+            </form>
+        </nav>
+    </div>
+{% endblock %}
+
+{% block body %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="error">{{message}}</div>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="settings-content">
+        <div class="container">
+            <h2>Settings</h2>
+            <div class="public-info">
+                <h3>Public Info</h3>
+                <form action="/settings" method="POST">
+                    <div class="username">
+                        <label for="username">Username</label>
+                        <input id="useranme" type="text" autocomplete="off" autofocus value="{{username}}" name="username" class="main-input">
+                    </div>
+                    <div class="email">
+                        <label for="email">E-mail</label>
+                        {% if info['email'] %}
+                            <input id="email" type="email" autocomplete="off" autofocus value="{{info['email']}}" name="email" class="main-input">
+                        {% else %}
+                            <input id="email" type="email" autocomplete="off" autofocus value="" name="email" placeholder="E-mail" class="main-input">
+                        {% endif %}
+                    </div>
+                    <div class="country">
+                        <label for="country">Country</label>
+                        {% if info['country'] %}
+                            <input id="country" type="text" autocomplete="off" autofocus value="{{info['country']}}" name="country" class="main-input">
+                        {% else %}
+                            <input id="country" type="text" autocomplete="off" autofocus value="" placeholder="Country" name="country" class="main-input">
+                        {% endif %}
+                    </div>
+                    <div class="city">
+                        <label for="city">City</label>
+                        {% if info['city'] %}
+                            <input id="city" type="text" autocomplete="off" autofocus value="{{info['city']}}" name="city" class="main-input">
+                        {% else %}
+                            <input id="city" type="text" autocomplete="off" autofocus value="" placeholder="City" name="city" class="main-input">
+                        {% endif %}
+                    </div>
+                    <div class="birth-date">
+                        <h4>Date of Birth</h4>
+                        <div class="birth-content">
+                            <div class="day">
+                                <label for="day">Day</label>
+                                {% if info['day'] %}
+                                    <input id="day" type="number" autocomplete="off" autofocus value="{{info['day']}}" name="day" class="main-input">
+                                {% else %}
+                                    <input id="day" type="number" autocomplete="off" autofocus value="" placeholder="Day" name="day" class="main-input">
+                                {% endif %}
+                            </div>
+                            <div class="month">
+                                <label for="month">Month</label>
+                            {% if info['month'] %}
+                                <input id="month" type="number" autocomplete="off" autofocus value="{{info['month']}}" name="month" class="main-input">
+                            {% else %}
+                                <input id="month" type="number" autocomplete="off" autofocus value="" placeholder="Month" name="month" class="main-input">
+                            {% endif %}
+                            </div>
+                            <div class="year">
+                                <label for="year">Year</label>
+                            {% if info['year'] %}
+                                <input id="year" type="number" autocomplete="off" autofocus value="{{info['year']}}" name="year" class="main-input">
+                            {% else %}
+                                <input id="year" type="number" autocomplete="off" autofocus value="" placeholder="Year" name="year" class="main-input">
+                            {% endif %}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+            <div class="profile-img">
+                <h3>Profile Image</h3>
+                <div class="profile-img-content">
+                    <div class="image">
+                        {% if profile_img_path %}
+                            <img src="{{profile_img_path}}" alt="Profile Image">
+                        {% else %}
+                            <img src="../static/images/avatar-01.png" alt="Profile Image">
+                        {% endif %}
+                    </div>
+                    <form action="/upload_profile_img" method="POST" enctype="multipart/form-data">
+                        <label for="profile_img" class="btn">Change</label>
+                        <input type="file" name="file" id="profile_img">
+                        <button type="submit" class="btn">Confirm</button>
+                    </form>
+                </div>
+            </div>
+            <div class="password-change">
+                <h3>Password</h3>
+                <p>Change Password</p>
+                <form action="/password" method="POST">
+                    <input type="password" name="old_password" placeholder="Old Password" class="main-input">
+                    <input type="password" name="new_password" placeholder="New Password" class="main-input">
+                    <button type="submit" class="btn">Change</button>
+                </form>
+            </div>
+            <div class="friends">
+                <h3>Friends</h3>
+                {% if not friends %}
+                    <div class="no-chats">
+                        <h3>No Friends Yet</h3>
+                        <p>Search for friends and add them to chat !!</p>
+                    </div>
+                {% endif %}
+                {% for friend in friends %}
+                    <div class="friend">
+                        <form action="/profile" method="POST">
+                            <input type="hidden" value="{{friend['id']}}" name="profile_id">
+                            {% if friend['profile_img_path']: %}
+                                <input type="hidden" value="{{friend['profile_img_path']}}" name="profile_img">
+                            {% endif %}
+                            <button type="submit"> 
+                                <div class="image">
+                                    {% if friend['profile_img_path'] %}
+                                        <img src="{{friend['profile_img_path']}}" alt="Profile Image">
+                                    {% else %}
+                                        <img src="../static/images/avatar-01.png" alt="Profile Image">
+                                    {% endif %}
+                                </div>
+                            </button>
+                        </form>
+                        <div class="friend-info">
+                            <span>{{friend['name']}}</span>
+                        </div>
+                        <div class="remove-friend">
+                            <form action="remove_friend" method="POST">
+                                <input type="hidden" value="{{friend['id']}}" name="friend_id">
+                                <button type="submit" class="btn">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,441 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Chat
+{% endblock %}
+
+{% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block header %}
+    <div class="header-content">
+        <div class="logo">
+            <a href="/"><img src="../static/images/logo3.png" alt="logo"></a>
+        </div>
+        <a href="/" class="home"><i class="fa-fw fa-solid fa-arrow-left-long"></i></a>
+    </div>
+{% endblock %}
+{% block body %}
+
+{% with errors = get_flashed_messages() %}
+    {% if errors %}
+        {% for error in errors %}
+        <div class="error">{{error}}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+    <div class="container">
+        <div class="chat-content">
+            <div class="chat-nav">
+                <form action="/profile" method="POST">
+                    <input type="hidden" value="{{other_user_id}}" name="profile_id">
+                    <button class="profile" type="submit">
+                        {% if chat_img != "None" %}
+                            <img src="{{chat_img}}" alt="Profile Image">
+                            <input type="hidden" value="{{chat_img}}" name="profile_img">
+                        {% endif %}
+                        {% if chat_img == "None" %}
+                            <img src="../static/images/avatar-01.png" alt="Profile Image">
+                        {% endif %}
+                    </button>
+                </form>
+                <span>{{chat_name}}</span>
+                <form action="/delete_chat" method="POST" class="delete-chat">
+                    <input type="hidden" value="{{chat_id}}" name="chat_id">
+                    <button type="submit"><i class="fa-fw fa-solid fa-trash-can"></i></button>
+                    <span>Delete Chat</span>
+                </form>
+            </div>
+            <div class="messages" id="messages">
+                {% for message in messages %}
+                    {% if message['sender_id'] == user_id %}
+                        <div class="sent-message">
+                            <i class="fa-fw fa-solid fa-circle-info control-icon" id="controlIcon"></i>
+                            <div class="message-control" id="messageControl">
+                                <form action="/delete_message" method="POST">
+                                    <input type="hidden" value="{{message['id']}}" name="message_id">
+                                    <input type="hidden" value="{{chat_id}}" name="chat_id">
+                                    <input type="hidden" value="{{chat_name}}" name="chat_name">
+                                    <input type="hidden" value="{{chat_img}}" name="chat_img">
+                                    <input type="hidden" value="{{other_user_id}}" name="other_user_id" id="other_user_id">
+                                    <input type="hidden" value="{{user_id}}" name="user_id" id="user_id">
+                                    <button type="submit"><i class="fa-fw fa-solid fa-trash-can"></i></button>
+                                    <span>Delete</span>
+                                </form>
+                                <form action="redirect_message" method="POST">
+                                    <input type="hidden" value="{{message['id']}}" name="message_id">
+                                    <button type="submit"><i class="fa-fw fa-solid fa-reply"></i></button>
+                                    <span>Redirect</span>
+                                </form>
+                            </div>
+                            {% if message['message'] and not message['img_path'] and not message['video_path'] and not message['sound_path'] and not message['file_path']%}
+                                <p>{{message['message']}}</p>
+                            {% elif message['img_path'] %}
+                                <img src="{{message['img_path']}}" alt="Image">
+                            {% elif message['video_path'] %}
+                                <video controls src="{{message['video_path']}}"></video>
+                            {% elif message['sound_path'] %}
+                                <audio controls src="{{message['sound_path']}}"></audio>
+                            {% elif message['file_path'] %}
+                                <div class="file-message">
+                                    <form action="/Uploads/{{message['message']}}" enctype="multipart/form-data" method="POST">
+                                        <p>{{message['message']}}</p>
+                                        <button type="submit"><i class="fa-fw fa-solid fa-file-download"></i></button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                            <div class="date">
+                                {{message['date']}}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="recieved-message">
+                            <i class="fa-fw fa-solid fa-circle-info control-icon" id="controlIcon"></i>
+                            <div class="message-control" id="messageControl">
+                                <form action="/delete_message" method="POST">
+                                    <input type="hidden" value="{{message['id']}}" name="message_id">
+                                    <input type="hidden" value="{{chat_id}}" name="chat_id">
+                                    <input type="hidden" value="{{chat_name}}" name="chat_name">
+                                    <input type="hidden" value="{{chat_img}}" name="chat_img">
+                                    <input type="hidden" value="{{other_user_id}}" name="other_user_id" id="other_user_id">
+                                    <input type="hidden" value="{{user_id}}" name="user_id" id="user_id">
+                                    <button type="submit"><i class="fa-fw fa-solid fa-trash-can"></i></button>
+                                    <span>Delete</span>
+                                </form>
+                                <form action="/redirect_message" method="POST">
+                                    <input type="hidden" value="{{message['id']}}" name="message_id">
+                                    <button type="submit"><i class="fa-fw fa-solid fa-reply"></i></button>
+                                    <span>Redirect</span>
+                                </form>
+                            </div>
+                            {% if message['message'] and not message['img_path'] and not message['video_path'] and not message['sound_path'] and not message['file_path'] %}
+                                <p>{{message['message']}}</p>
+                            {% elif message['img_path']%}
+                                <img src="{{message['img_path']}}" alt="Image">
+                            {% elif message['video_path'] %}
+                                <video controls src="{{message['video_path']}}"></video>
+                            {% elif message['sound_path'] %}
+                                <audio controls src="{{message['sound_path']}}"></audio>
+                            {% elif message['file_path'] %}
+                                <div class="file-message">
+                                    <form action="/Uploads/{{message['message']}}" method="POST" enctype="multipart/form-data">
+                                        <p>{{message['message']}}</p>
+                                        <button type="submit"><i class="fa-fw fa-solid fa-file-download"></i></button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                            <div class="date">
+                                {{message['date']}}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="upload-menu" id="uploadMenu">
+                    <div class="image" id="image">
+                        <i class="fa-solid fa-image"></i>
+                        <span>Image</span>
+                    </div>
+                    <form action="/upload_img" enctype="multipart/form-data" method="POST" id="uploadImage" class="upload-image form">
+                        <input type="hidden" value="{{chat_id}}" name="chat_id">
+                        <input type="hidden" value="{{chat_name}}" name="chat_name">
+                        <input type="hidden" value="{{chat_img}}" name="chat_img">
+                        <input type="hidden" value="{{other_user_id}}" name="other_user_id" id="other_user_id">
+                        <input type="hidden" value="{{user_id}}" name="user_id" id="user_id">
+                        <label for="uploadImgInput" class="btn">Upload Image</label>
+                        <input type="file" id="uploadImgInput" name="image">
+                        <button type="submit" class="btn" id="sendImgBtn">Confirm</button>
+                    </form>
+                    <div class="video" id="video">
+                        <i class="fa-solid fa-video"></i>
+                        <span>Video</span>
+                    </div>
+                    <form action="/upload_vid" enctype="multipart/form-data" method="POST" id="uploadVideo" class="upload-video form">
+                        <input type="hidden" value="{{chat_id}}" name="chat_id">
+                        <input type="hidden" value="{{chat_name}}" name="chat_name">
+                        <input type="hidden" value="{{chat_img}}" name="chat_img">
+                        <input type="hidden" value="{{other_user_id}}" name="other_user_id" id="other_user_id">
+                        <input type="hidden" value="{{user_id}}" name="user_id" id="user_id">
+                        <label for="uploadVidInput" class="btn">Upload Video</label>
+                        <input type="file" id="uploadVidInput" name="video">
+                        <button type="submit" class="btn" id="sendVidBtn">Confirm</button>
+                    </form>
+                    <div class="audio" id="audio">
+                        <i class="fa-solid fa-file-audio fa-fw"></i>
+                        <span>Audio</span>
+                    </div>
+                    <form action="/upload_audio" enctype="multipart/form-data" method="POST" id="uploadAudio" class="upload-audio form">
+                        <input type="hidden" value="{{chat_id}}" name="chat_id">
+                        <input type="hidden" value="{{chat_name}}" name="chat_name">
+                        <input type="hidden" value="{{chat_img}}" name="chat_img">
+                        <input type="hidden" value="{{other_user_id}}" name="other_user_id" id="other_user_id">
+                        <input type="hidden" value="{{user_id}}" name="user_id" id="user_id">
+                        <label for="uploadAudioInput" class="btn">Upload Audio</label>
+                        <input type="file" id="uploadAudioInput" name="audio">
+                        <button type="submit" class="btn" id="sendAudioBtn">Confirm</button>
+                    </form>
+                    <div class="file" id="file">
+                        <i class="fa-solid fa-file fa-fw"></i>
+                        <span>File</span>
+                    </div>
+                    <form action="/upload_file" enctype="multipart/form-data" method="POST" id="uploadFile" class="upload-file form">
+                        <input type="hidden" value="{{chat_id}}" name="chat_id">
+                        <input type="hidden" value="{{chat_name}}" name="chat_name">
+                        <input type="hidden" value="{{chat_img}}" name="chat_img">
+                        <input type="hidden" value="{{other_user_id}}" name="other_user_id" id="other_user_id">
+                        <input type="hidden" value="{{user_id}}" name="user_id" id="user_id">
+                        <label for="uploadFileInput" class="btn">Upload File</label>
+                        <input type="file" id="uploadFileInput" name="file">
+                        <button type="submit" class="btn" id="sendFileBtn">Confirm</button>
+                    </form>
+                </div>
+            </div>
+            <div class="send">
+                <form action="/send_message" method="POST">
+                    <input type="hidden" value="{{chat_id}}" name="chat_id" id="chat_id">
+                    <input type="hidden" value="{{chat_name}}" name="chat_name">
+                    <input type="hidden" value="{{chat_img}}" name="chat_img">
+                    <input type="hidden" value="{{other_user_id}}" name="other_user_id" id="other_user_id">
+                    <input type="hidden" value="{{user_id}}" name="user_id" id="user_id">
+                    <button type="submit" id="sendBtn" class="fa-fw fa-solid fa-reply"></button>
+                    <input type="text" id="message" class="main-input" autocomplete="off" placeholder="Message..." name="message">
+                    <i id="sendMenuIcon" class="fa-fw fa-solid fa-plus"></i>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        const socket = io.connect('http://127.0.0.1:5000');
+        const socket_chat = io('http://127.0.0.1:5000/chat');
+        const private_socket = io('http://127.0.0.1:5000/private');
+
+        let messageContainer = document.querySelector(".messages");
+        let user_id = document.getElementById("user_id");
+
+        socket_chat.on("connect", () => {
+            private_socket.emit('user_id', user_id.value)
+        });
+
+        let messageInput = document.getElementById("message");
+        let sendBtn = document.getElementById("sendBtn");
+
+        sendBtn.addEventListener("click", () => {
+            let reciever_id = document.getElementById("other_user_id");
+            let chat_id = document.getElementById("chat_id");
+            private_socket.emit('private_message', {'user_id' : reciever_id.value, 'message' : messageInput.value, 'chat_id' : chat_id.value});
+        });
+
+        private_socket.on('new_private_message', ({message, chat_id}) => {
+            let current_chat_id = document.getElementById("chat_id");
+            if(current_chat_id.value === chat_id)
+            {
+                let recievedMessage = document.createElement("div");
+                recievedMessage.setAttribute("class", "recieved-message");
+                let messageExtension = message.split(".");
+                let len = messageExtension.length - 1;
+                if (messageExtension[len] === 'jpg' || messageExtension[len] === 'png' || messageExtension[len] === 'jpeg' || messageExtension[len] === 'bmp' || messageExtension[len] === 'gif') {
+                    let img = document.createElement("img");
+                    img.src = ("../static/Uploads/" + message);
+                    recievedMessage.appendChild(img);
+                    messageContainer.appendChild(recievedMessage);
+                }
+                else if (messageExtension[len] === 'mov' || messageExtension[len] === 'mp4' || messageExtension[len] === 'avi' || messageExtension[len] === 'wmv') {
+                    let vid = document.createElement("video");
+                    let vid_path = ("../static/Uploads/" + message);
+                    vid.setAttribute("src", vid_path);
+                    vid.setAttribute("controls", "");
+                    recievedMessage.appendChild(vid);
+                    messageContainer.appendChild(recievedMessage);
+                }
+                else if (messageExtension[len] === 'mp3' || messageExtension[len] === 'm4a' || messageExtension[len] === 'wav' || messageExtension[len] === 'wma' || messageExtension[len] === 'aac') {
+                    let audio = document.createElement("audio");
+                    let audio_path = ("../static/Uploads/" + message);
+                    audio.setAttribute("src", audio_path);
+                    audio.setAttribute("controls", "");
+                    recievedMessage.appendChild(audio);
+                    messageContainer.appendChild(recievedMessage);
+                }
+                else {
+                    let p = document.createElement("p");
+                    p.innerText = message;
+                    recievedMessage.appendChild(p);  
+                    messageContainer.appendChild(recievedMessage);
+                }
+            }
+        });
+
+        private_socket.on("new_private_file_message", ({message, chat_id}) => {
+            let current_chat_id = document.getElementById("chat_id");
+            if(current_chat_id.value === chat_id)
+            {
+                let recievedMessage = document.createElement("div");
+                let fileMessage = document.createElement("div");
+                fileMessage.setAttribute("class", "file-message");
+                let p = document.createElement("p");
+                let i = document.createElement("i");
+                let form = document.createElement("form");
+                let btn = document.createElement("button");
+                let file_path = ("/Uploads/" + message);
+                new_file_path = file_path.replaceAll(" ", "_");
+                recievedMessage.setAttribute("class", "recieved-message");
+                i.setAttribute("class", "fa-fw fa-solid fa-file-download");
+                form.setAttribute("action", new_file_path);
+                form.setAttribute("method", "POST");
+                form.setAttribute("enctype", "multipart/form-data");
+                btn.setAttribute("type", "submit");
+                p.innerText = message;
+                btn.appendChild(i);
+                form.appendChild(p);
+                form.appendChild(btn);
+                fileMessage.appendChild(form);
+                recievedMessage.appendChild(fileMessage);
+                messageContainer.appendChild(recievedMessage);
+            }
+        });
+
+        let uploadImgInput = document.getElementById("uploadImgInput");
+        let sendImgBtn = document.getElementById("sendImgBtn");
+
+        sendImgBtn.addEventListener("click", () => {
+            let reciever_id = document.getElementById("other_user_id");
+            let chat_id = document.getElementById("chat_id");
+            private_socket.emit('private_message', {'user_id' : reciever_id.value, 'message' : uploadImgInput.files[0].name, 'chat_id' : chat_id.value});
+        });
+
+        let uploadVidInput = document.getElementById("uploadVidInput");
+        let sendVidBtn = document.getElementById("sendVidBtn");
+
+        sendVidBtn.addEventListener("click", () => {
+            let reciever_id = document.getElementById("other_user_id");
+            let chat_id = document.getElementById("chat_id");
+            private_socket.emit('private_message', {'user_id' : reciever_id.value, 'message' : uploadVidInput.files[0].name, 'chat_id' : chat_id.value});
+        });
+
+        let uploadAudioInput = document.getElementById("uploadAudioInput");
+        let sendAudioBtn = document.getElementById("sendAudioBtn");
+
+        sendAudioBtn.addEventListener("click", () => {
+            let reciever_id = document.getElementById("other_user_id");
+            let chat_id = document.getElementById("chat_id");
+            private_socket.emit('private_message', {'user_id' : reciever_id.value, 'message' : uploadAudioInput.files[0].name, 'chat_id' : chat_id.value});
+        });
+
+        let uploadFileInput = document.getElementById("uploadFileInput");
+        let sendFileBtn = document.getElementById("sendFileBtn");
+
+        sendFileBtn.addEventListener("click", () => {
+            let reciever_id = document.getElementById("other_user_id");
+            let chat_id = document.getElementById("chat_id");
+            private_socket.emit('private_file_message', {'user_id' : reciever_id.value, 'message' : uploadFileInput.files[0].name, 'chat_id' : chat_id.value});
+        });
+
+        let menuIcon = document.getElementById("sendMenuIcon");
+        let menu = document.getElementById("uploadMenu");
+        let forms = document.querySelectorAll(".form");
+
+        menuIcon.addEventListener("click", function() {
+            if (menu.style.opacity == "1") {
+                menu.style.opacity = "0";
+                menu.style.visibility = "hidden";
+            }
+            else {
+                menu.style.opacity = "1";
+                menu.style.visibility = "visible";
+            }
+            for (let i = 0; i < forms.length; i++) {
+                forms[i].style.opacity = "0";
+                forms[i].style.visibility = "hidden";  
+            }
+        });
+
+        let image = document.getElementById("image");
+        let uploadImage = document.getElementById("uploadImage");
+
+        image.addEventListener("click", function () {
+            for (let i = 0; i < forms.length; i++) {
+                forms[i].style.opacity = "0";
+                forms[i].style.visibility = "hidden";  
+            }
+            if (uploadImage.style.opacity == "1")
+            {
+                uploadImage.style.opacity = "0";
+                uploadImage.style.visibility = "hidden";
+            }
+            else {
+                uploadImage.style.opacity = "1";
+                uploadImage.style.visibility = "visible";
+            }
+        });;
+
+        let video = document.getElementById("video");
+        let uploadVideo = document.getElementById("uploadVideo");
+
+        video.addEventListener("click", function () {
+            for (let i = 0; i < forms.length; i++) {
+                forms[i].style.opacity = "0";
+                forms[i].style.visibility = "hidden";  
+            }
+            if (uploadVideo.style.opacity == "1")
+            {
+                uploadVideo.style.opacity = "0";
+                uploadVideo.style.visibility = "hidden"
+            }
+            else {
+                uploadVideo.style.opacity = "1";
+                uploadVideo.style.visibility = "visible"
+            }
+        });
+
+        let audio = document.getElementById("audio");
+        let uploadAudio = document.getElementById("uploadAudio");
+
+        audio.addEventListener("click", function () {
+            for (let i = 0; i < forms.length; i++) {
+                forms[i].style.opacity = "0";
+                forms[i].style.visibility = "hidden";  
+            }
+            if (uploadAudio.style.opacity == "1")
+            {
+                uploadAudio.style.opacity = "0";
+                uploadAudio.style.visibility = "hidden"
+            }
+            else {
+                uploadAudio.style.opacity = "1";
+                uploadAudio.style.visibility = "visible"
+            }
+        });
+
+        let file = document.getElementById("file");
+        let uploadFile = document.getElementById("uploadFile");
+
+        file.addEventListener("click", function () {
+            for (let i = 0; i < forms.length; i++) {
+                forms[i].style.opacity = "0";
+                forms[i].style.visibility = "hidden";  
+            }
+            if (uploadFile.style.opacity == "1")
+            {
+                uploadFile.style.opacity = "0";
+                uploadFile.style.visibility = "hidden";
+            }
+            else {
+                uploadFile.style.opacity = "1";
+                uploadFile.style.visibility = "visible";
+            }
+        });
+
+        let controlIcon = document.querySelectorAll("#controlIcon");
+        let messageControl = document.querySelectorAll("#messageControl");
+        for (let i = 0; i < controlIcon.length; i++) {
+            controlIcon[i].addEventListener("click", () => {
+                if (messageControl[i].style.display = "none") {
+                    controlIcon[i].style.display = "none";
+                    messageControl[i].style.display = "flex";
+                    messageControl[i].style.opacity = "1";
+                }
+            }) 
+        }
+    </script>
+{% endblock %}

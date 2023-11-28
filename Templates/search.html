@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Result
+{% endblock %}
+
+{% block header %}
+    <div class="header-content">
+        <div class="logo">
+            <a href="/"><img src="../static/images/logo3.png" alt="logo"></a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="result">
+        <div class="container">
+            <h2>Users</h2>
+            <div class="result-content">
+                {% for user, fact in packed %}
+                <div class="profile">
+                    <form action="/profile" method="POST">
+                        <input type="hidden" value="{{user['id']}}" name="profile_id">
+                        <button type="submit">
+                            <div class="user">
+                                <div class="image">
+                                    {% if user['profile_img_path'] %}
+                                        <img src="{{user['profile_img_path']}}" alt="Profile Image">
+                                        <input type="hidden" value="{{user['profile_img_path']}}" name="profile_img">
+                                    {% else %}
+                                        <img src="../static/images/avatar-01.png" alt="Profile Image">
+                                    {% endif %}
+                                </div>
+                                <div class="user-info">
+                                    <h3>{{user['name']}}</h3>
+                                    <div class="info"></div>
+                                    {% if fact['country'] and fact['city'] %} 
+                                        <p><span>Origin: </span>{{fact['city']}}, {{fact['country']}}</p>
+                                    {% endif %}
+                                    {% if fact['city'] and not fact['country'] %} 
+                                        <p><span>Origin: </span>{{fact['city']}}</p>
+                                    {% endif %}
+                                    {% if not fact['city'] and fact['country'] %} 
+                                        <p><span>Origin: </span>{{fact['country']}}</p>
+                                    {% endif %}
+                                    {% if fact['day'] and fact['month'] and fact['year'] %}
+                                        <p><span>Date Of Birth: </span>{{fact['day']}}/{{fact['month']}}/{{fact['year']}}</p>
+                                    {% endif %}
+                                    {% if fact['day'] and fact['month'] and not fact['year'] %}
+                                        <p><span>Date Of Birth: </span>{{fact['day']}}/{{fact['month']}}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </button>
+                    </form>
+                    {% if fact['person_id'] != user_id and fact['person_id'] not in friends_ids %}
+                    <form action="/add" method="POST">
+                        <input type="hidden" value="{{fact['person_id']}}" name="add_friend_id">
+                        <button type="submit" class="btn add">Add</button>
+                    </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

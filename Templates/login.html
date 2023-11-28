@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+{% block header %}
+    <div class="header-content">
+        <div class="logo">
+            <img src="../static/images/logo3.png" alt="logo">
+        </div>
+        <nav>
+            <a href="/register" class="register btn">Register</a>
+        </nav>
+    </div>
+{% endblock %}
+
+{% block body %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="error">{{message}}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+    <div class="page">
+    <div class="container">
+    <div class="logo">
+        <img src="../static/images/logo3.png" alt="logo">
+    </div>
+        <h1>Welcome To WeChat</h1>  
+        <form action="/login" method="POST" class="login">
+            <input type="text" autocomplete="off" autofocus placeholder="Username" name="username">
+            <input type="password" autocomplete="off" placeholder="Password" name="password">
+            <button type="submit">Log In</button>
+        </form>
+    </div>
+    </div>
+{% endblock %}

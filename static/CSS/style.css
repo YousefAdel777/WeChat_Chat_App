@@ -1,0 +1,1191 @@
+* {
+    box-sizing: border-box;
+    outline: none;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --main-color: rgb(95, 255, 47);
+    --second-color: rgb(74, 192, 37);
+}
+a {
+    color: black;
+    text-decoration: none;
+}
+input {
+    border: none;
+    box-shadow: 1px 3px 12px 1px rgba(204, 204, 204, 0.507);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+ul {
+    list-style: none;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+img {
+    max-width: 100%;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+@media (min-width:768px) {
+    .container {
+        width: 750px;
+    }
+}
+
+@media (min-width:992px) {
+    .container {
+        width: 970px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 1170px;
+    }
+}
+.main-input {
+    margin-bottom: 20px;
+    padding: 10px 15px 10px 25px;
+    border-radius: 30px;
+}
+.error {
+    color: white;
+    background-color: rgba(250, 37, 37, 0.746);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+}
+.btn {
+    color: white;
+    background-color: var(--main-color);
+    border: none;
+    width: fit-content;
+    display: block;
+    padding: 12px 25px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: .3s;
+}
+.btn:hover {
+    background-color: var(--second-color);
+}
+.page img {
+    height: 120px;
+}
+
+a.register {
+    transition: .3s;
+}
+
+@media (max-width: 1199px) {
+    a.register {
+        margin-bottom: 20px;
+    }
+    a.login {
+        margin-bottom: 20px;
+    }
+}
+
+.page .container {
+    display: flex; 
+    flex-flow: column wrap; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.page h1 {
+    font-size: 40px;
+    margin: 30px 0;
+}
+
+@media (max-width: 991px) {
+    .page h1 {
+        font-size: 30px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 767px) {
+    .page img {
+        height: 90px;
+    }
+}
+
+.page form {
+    display: flex; 
+    flex-flow: column;
+}
+
+.page input {
+    margin-bottom: 20px;
+    padding: 10px 15px 10px 25px;
+    border-radius: 30px;
+}
+
+.page button {
+    color: white;
+    background-color: var(--main-color);
+    border: none;
+    width: fit-content;
+    display: block;
+    padding: 12px 25px;
+    margin: 40px auto 0;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: .3s;
+}
+.page button:hover {
+    background-color: var(--second-color);
+}
+
+header {
+    background-color: #eee;
+    position: relative;
+}
+
+header nav {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+header nav a.settings {
+    width: 35px;
+    height: 35px;
+    transition: .3s;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--main-color);
+}
+header nav .settings:hover {
+    background-color: #ccc;
+}
+header nav img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+header form:not(.logout):not(.user-profile) {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 40px;
+    width: 300px;
+}
+header form input[type="search"] {
+    border: none;
+    box-shadow: 1px 5px 10px 1px #ccc;
+    border-radius: 100px;
+    padding: 10px 15px 10px 35px;
+    caret-color: green;
+    height: 100%;
+    width: 100%;
+}
+header form:not(.user-profile) button[type="submit"]:not(.btn) {
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: .3s;
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+}
+header form:not(.user-profile) button[type="submit"]:not(.btn):hover {
+    background-color: #eee;
+}
+header form:not(.logout):not(.user-profile)::before {
+    position: absolute;
+    content: "";
+    background-color: #ccc;
+    width: 1px;
+    height: 100%;
+    right: 15%;
+} 
+
+.header-content {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-content .home {
+    color: var(--main-color);
+    font-size: 26px;
+    position: absolute;
+    top: 50%;
+    right: 95%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border: var(--main-color) 2px solid;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s;
+}
+
+.header-content .home:hover {
+    background-color: #ccc;
+}
+
+@media (max-width: 1199px) {
+    .header-content {
+        flex-flow: column;
+        gap: 20px;
+    }
+    header:has(input[type="search"]) {
+        height: 150px;
+    }
+    header:has(.logout) {
+        height: 150px;
+    }
+    .header-content .home {
+        right: 88%;
+    }
+}
+.header-content .logo img {
+    height: 70px;
+}
+.settings-content h2 {
+    margin: 30px 0;
+    font-size: 35px;
+}
+.settings-content h3 {
+    margin: 20px 0;
+    font-size: 25px;
+}
+
+.public-info {
+    background-color: #eee;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.public-info form {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    flex-flow: row wrap;
+}
+
+.public-info .birth-date h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.public-info .birth-content {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.birth-date button {
+    margin-top: 30px;
+}
+
+@media (max-width: 767px) {
+    .public-info form {
+        flex-flow: column;
+        text-align: center;
+    }
+    .public-info .birth-content {
+        flex-flow: column;
+    }
+    .birth-date button {
+        margin: 30px auto 0;
+    }
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.profile-img {
+    background-color: #eee;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.profile-img-content {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-img-content form {
+    display: flex;
+    flex-flow: column;
+}
+
+.profile-img-content form label {
+    margin-top: 20px;
+}
+
+.profile-img-content form input {
+    display: none;
+}
+
+.profile-img-content form button {
+    margin-top: 20px;
+}
+
+.profile-img-content img {
+    border-radius: 50%;
+    height: 250px;
+    width: 250px;
+}
+
+.password-change {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #eee;
+    margin-top: 30px;
+}
+
+.password-change h3 {
+    margin: 15px 0;
+    font-size: 25px;
+}
+
+.password-change p {
+    margin: 15px 0;
+    color: #333;
+}
+
+.password-change form {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.friends {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #eee;
+    margin-top: 30px;
+}
+
+.friends h3 {
+    margin: 15px 0;
+    font-size: 25px;
+}
+
+.friends .friend {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.friends .friend form {
+    min-width: 60px;
+}
+
+.friends .friend button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.friends img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.friend-info span {
+    font-weight: bold;
+    color: var(--main-color);
+    font-size: 20px;
+}
+
+.friends .remove-friend {
+    flex: 1;
+}
+
+@media (max-width: 767px) {
+    .friend .remove-friend button {
+        padding: 10px 12px;
+    }
+    .friends .friend {
+        gap: 10px;
+        justify-content: space-between;
+    }
+    .friend-info span {
+        font-size: 18px;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .friends img {
+        width: 65px;
+        height: 65px;
+    }
+    .friends .remove-friend {
+        flex: 0;
+    }
+}
+
+.friends .remove-friend button {
+    background-color: rgb(240, 47, 47);
+    margin: 0 0 0 auto;
+    transition: .3s;
+}
+
+.friends .remove-friend button:hover {
+    background-color: rgb(187, 41, 41);
+}
+
+.result-content {
+    display: flex;
+    flex-flow: column wrap;
+    gap: 30px;
+}
+.result h2 {
+    margin: 30px 0;
+    font-size: 35px;
+}
+
+.result-content form:nth-child(1) {
+    display: flex;
+    flex: 1;
+}
+
+.result-content button:not(.add) {
+    border-radius: 10px;
+    padding: 20px;
+    transition: .3s;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+}
+
+.result-content button .user {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 40px;
+}
+.result-content button:not(.add):hover {
+    background-color: #ccc;
+}
+.result-content .user img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+.result-content .user .user-info {
+    flex: 1;
+    text-align: left;
+}
+
+.result-content .user .user-info span,
+.result-content .user .user-info h3 {
+    color: var(--main-color);
+}
+
+.result-content .user .user-info p {
+    margin-bottom: 5px;
+}
+
+.result-content .profile {
+    display: flex;
+    background-color: #eee;
+    align-items: center;
+    gap: 20px;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    .result-content .profile {
+        padding: 10px;
+        gap: 10px;
+    }
+    .result-content button {
+        padding: 10px;
+    }
+    .result-content button .user {
+        gap: 10px;
+        flex-flow: row;
+    }
+}
+.chats h2 {
+    font-size: 35px;
+    margin: 20px 0;
+}
+.chats-content {
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.chat {
+    background-color: #eee;
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    transition: .3s;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.chat:hover {
+    background-color: #ccc;
+}
+
+.chat button {
+    border: none;
+    width: 100%;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    height: 100%;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.chat:last-child {
+    border: none;
+}
+
+.chat img {
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+}
+
+.chat .image {
+    min-width: 80px;
+}
+
+.chat .chat-info {
+    flex: 1;
+}
+
+.chat .chat-info p {
+    max-width: 800px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+@media (max-width: 1199px) {
+    .chat .chat-info p {
+        max-width: 600px;
+    }
+}
+
+@media (max-width:991px) {
+    .chat .chat-info p {
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 767px) {
+    .chat .chat-info p {
+        max-width: 120px;
+    }
+    .chat img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+.chat h3 {
+    margin-bottom: 8px;
+    font-size: 20px;
+    color: var(--main-color);
+    text-align: left;
+}
+.chat p {
+    color: #777;
+    text-align: left;
+}
+
+.chats-container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.chat .date {
+    color: #777;
+    font-size: 14px;
+    align-self: flex-end;
+}
+
+@media (max-width: 767px) {
+    header nav {
+        gap: 12px;
+    }
+
+    .chat .date {
+        font-size: 11px;
+    }
+
+    .chat button {
+        gap: 12px;
+    }
+
+    header form:not(.user-profile) button[type="submit"]:not(.btn) {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+.chat-content {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #eee;
+    min-height: 100vh;
+    position: relative;
+}
+
+.chat-content .chat-nav {
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.116);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+@media (max-width: 767px) {
+    .chat-content .chat-nav {
+        gap: 15px;
+    }
+}
+
+.chat-content .chat-nav img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.chat-nav button:not(.profile) {
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.chat-nav button:not(.profile):hover {
+    background-color: #eee;
+}
+
+.chat-nav button.profile {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.chat-content .chat-nav span {
+    color: var(--main-color);
+    font-weight: bold;
+}
+
+.chat-nav button i {
+    font-size: 20px;
+    color: var(--main-color);
+}
+
+.chat-content .messages {
+    display: flex;
+    flex-flow: column wrap;
+    gap: 20px;
+    padding: 15px 10px;
+}
+
+.chat-content .messages img,
+.chat-content .messages video {
+    max-width: 100%;
+}
+
+.chat-content .messages .recieved-message {
+    align-self: flex-end;
+    background-color: white;
+    padding: 15px;
+    border-radius: 30px;
+    max-width: 400px;
+    overflow-wrap: break-word;
+    position: relative;
+}
+
+.chat-content .messages .sent-message {
+    background-color: var(--main-color);
+    padding: 15px;
+    border-radius: 30px;
+    align-self: flex-start;
+    max-width: 400px;
+    overflow-wrap: break-word;
+    position: relative;
+}
+
+@media (max-width: 767px) {
+    .chat-content .messages .recieved-message,
+    .chat-content .messages .sent-message {
+        max-width: 200px;
+
+    }
+    .chat-content .messages .file-message p {
+        max-width: 80%;
+    }
+}
+
+.chat-content .send {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    padding: 10px;
+    background-color:#eee;
+}
+
+.chat-content .send form {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    position: relative;
+}
+
+.chat-content .send input[type="text"] {
+    margin: 0;
+    flex: 1;
+}
+
+.chat-content .send button {
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: var(--main-color);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s;
+}
+
+.chat-content .send button:hover {
+    background-color: var(--second-color);
+}
+
+.messages .date {
+    font-size: 10px;
+    color: #777;
+    position: absolute;
+    top: calc(100% + 2px);
+    min-width: 100px;
+}
+
+.messages .recieved-message .date {
+    right: -3px;
+}
+
+.send form > i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    position: absolute;
+    top: 50%;
+    left: calc(100% - 45px);
+    font-size: 18px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    transform: translateY(-50%);
+    transition: .3s;
+    cursor: pointer;
+}
+
+.send form > i:hover {
+    background-color: #eee;
+}
+
+.messages .upload-menu {
+    opacity: 0;
+    border-radius: 15px;
+    width: 70px;
+    padding: 10px;
+    background-color: white;
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    z-index: 1;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    transition: .3s;
+    visibility: hidden;
+}
+
+.messages .upload-menu > div {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+    padding: 5px;
+    border-radius: 15px;
+    cursor: pointer;
+    min-width: 45px;
+    transition: .3s;
+}
+
+.messages .upload-menu > div:hover {
+    background-color: #eee;
+}
+
+.messages .upload-menu i {
+    width: 1.25em;
+    margin-bottom: 5px;
+}
+
+
+.messages .upload-menu > div:nth-of-type(1) i,
+.messages .upload-menu > div:nth-of-type(1) span {
+    color: var(--main-color);
+}
+
+.messages .upload-menu > div:nth-of-type(2) i,
+.messages .upload-menu > div:nth-of-type(2) span {
+    color: rgb(30, 96, 238);
+}
+
+.messages .upload-menu > div:nth-of-type(3) i,
+.messages .upload-menu > div:nth-of-type(3) span {
+    color: rgb(248, 172, 29);
+}
+
+.messages .upload-menu > div:nth-of-type(4) i,
+.messages .upload-menu > div:nth-of-type(4) span {
+    color: rgb(189, 23, 23);
+}
+
+.messages .upload-menu span {
+    display: block;
+    font-size: 13px;
+}
+
+.messages .upload-menu form {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    background-color: white;
+    padding: 15px;
+    right: 80px;
+    transition: .3s;
+    border-radius: 20px;
+    min-width: 180px;
+}
+
+.messages .upload-menu form input[type="file"] {
+    display: none;
+}
+
+.messages .upload-menu form:hover {
+    background-color: white;
+}
+
+.chat-content .messages .file-message form {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-content .messages .file-message form button {
+    background-color: transparent;
+    border: none;
+    color: #ccc;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.chat-content .messages .file-message form button:hover {
+    background-color: #777;
+}
+
+.no-chats {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.no-chats h3 {
+    margin-bottom: 15px;
+}
+
+.no-chats p {
+    color: #777;
+}
+
+.control-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #ccc;
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+    width: 30px;
+    height: 30px;
+    transition: .3s;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.control-icon:hover {
+    background-color: #777;
+}
+
+.sent-message .control-icon {
+    left: 100%;
+}
+
+.recieved-message .control-icon {
+    right: 100%;
+}
+
+.message-control {
+    display: none;
+    opacity: 0;
+    transition: .3s;
+    position: absolute;
+    padding: 5px;
+    border-radius: 20px;
+    gap: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.sent-message .message-control {
+    left: 100%;
+}
+
+.recieved-message .message-control {
+    right: 100%;
+}
+
+.message-control button {
+    margin: 0 auto;
+    font-size: 14px;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+}
+
+.message-control form:first-of-type button,
+.message-control form:first-of-type span {
+    color: rgb(194, 22, 22);
+}
+
+.message-control form:last-of-type button,
+.message-control form:last-of-type span {
+    color: var(--main-color);
+}
+
+.message-control form {
+    transition: .3s;
+    border-radius: 20px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+}
+
+.message-control form:hover {
+    background-color: #ccc;
+}
+
+.message-control button i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 3px;
+}
+
+.message-control span {
+    display: block;
+    font-size: 12px;
+    text-align: center;
+}
+
+.delete-chat {
+    flex: 1;
+    text-align: right;
+}
+
+.profile h2 {
+    margin: 30px 0;
+    font-size: 35px;
+}
+
+.profile .profile-content {
+    background-color: #eee;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.profile .profile-content .image {
+    margin: 0 0 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.profile .profile-content .image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.profile .profile-content .forms {
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
+    width: 10%;
+}
+
+.profile .profile-content button {
+    border: 2px solid var(--main-color);
+    background-color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    color: var(--main-color);
+    width: 45px;
+    height: 45px;
+    transition: .3s;
+}
+
+.profile .profile-content form:nth-of-type(2) button {
+    margin-left: 20px;
+}
+
+.profile .profile-content button span {
+    display: block;
+    text-align: center;
+    color: var(--main-color);
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.profile .profile-content button:hover {
+    background-color: #ccc;
+}
+
+.profile-info {
+    margin-top: 30px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.profile-info h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.profile-info .info {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 30px;
+}
+
+.profile-info .fact {
+    padding: 10px;
+    border-bottom: 1px #eee solid;
+}
+
+@media (max-width: 767px) {
+    .profile-info .info {
+        gap: 0;
+    }
+    .profile-info .fact {
+        padding: 20px;
+    }
+    .profile-info .fact:last-child {
+        border: none;
+    }
+}
+
+.profile-info span {
+    color: var(--main-color);
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.profile-info p {
+    display: inline;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.user-profile button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.redirect h2 {
+    margin: 30px 0;
+    font-size: 35px;
+}
+
+.redirect .redirect-content {
+    background-color: #eee;
+    padding: 20px;
+    border-radius: 20px;
+}
